@@ -1,0 +1,35 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: kedaexemplo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kedaexemplo
+  template:
+    metadata:
+      labels:
+        app: kedaexemplo
+    spec:
+      containers:
+        - name: kedaexemplo
+          image: marraiakeda.azurecr.io/kedaexemplo:#{BuildId}#
+          ports:
+          - containerPort: 80
+          env:
+          - name: ServiceBus__Connection
+            value: ""
+      imagePullSecrets:
+        - name: marraiasecretkey
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: kedaexemplo
+spec:
+    type: ClusterIP
+    ports:
+    - port: 80 
+    selector:
+        app: kedaexemplo
